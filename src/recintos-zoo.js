@@ -1,16 +1,12 @@
-// Função principal para analisar recintos viáveis para um determinado animal
 export function analisaRecinto(animal, quantidade, recintos, animais) {
-    // Verifica se o animal é válido
     if (!animais[animal]) {
         return { erro: "Animal inválido", recintosViaveis: null };
     }
 
-    // Verifica se a quantidade é válida
     if (quantidade <= 0) {
         return { erro: "Quantidade inválida", recintosViaveis: null };
     }
 
-    // Calcula os recintos viáveis
     const recintosViaveis = recintos
         .filter(recinto => {
             const espacoNecessario = quantidade * animais[animal].tamanho;
@@ -20,10 +16,8 @@ export function analisaRecinto(animal, quantidade, recintos, animais) {
             const temCarnivoro = recinto.animais.some(a => animais[a.especie].carnivoro);
             const novoAnimalCarnivoro = animais[animal].carnivoro;
 
-            // Verifica se a coexistência é possível
             const coexistencia = !(temCarnivoro && !novoAnimalCarnivoro) && !(novoAnimalCarnivoro && recinto.animais.length > 0);
 
-            // Log para depuração
             console.log(`Recinto: ${recinto.nome}, Espaço Livre: ${espacoLivre}, Bioma Compatível: ${biomaCompativel}, Coexistência: ${coexistencia}`);
             
             return espacoLivre >= 0 && biomaCompativel && coexistencia;
@@ -32,19 +26,15 @@ export function analisaRecinto(animal, quantidade, recintos, animais) {
             const espacoLivreA = a.capacidade - a.ocupacao;
             const espacoLivreB = b.capacidade - b.ocupacao;
             
-            // Log para depuração
             console.log(`Espaço Livre A: ${espacoLivreA}, Espaço Livre B: ${espacoLivreB}`);
             
-            // Prioriza maior espaço livre primeiro
             if (espacoLivreA === espacoLivreB) {
-                // Se espaço livre for igual, prioriza maior capacidade total
                 return b.capacidade - a.capacidade;
             }
             return espacoLivreB - espacoLivreA;
         })
         .map(recinto => `${recinto.nome} (espaço livre: ${recinto.capacidade - recinto.ocupacao} total: ${recinto.capacidade})`);
 
-    // Verifica se existem recintos viáveis
     if (recintosViaveis.length === 0) {
         return { erro: "Não há recinto viável", recintosViaveis: null };
     }
@@ -52,7 +42,6 @@ export function analisaRecinto(animal, quantidade, recintos, animais) {
     return { erro: null, recintosViaveis };
 }
 
-// Classe RecintosZoo para gerenciar recintos e animais
 class RecintosZoo {
     constructor() {
         this.recintos = [
@@ -73,7 +62,6 @@ class RecintosZoo {
         };
     }
 
-    // Método para analisar os recintos viáveis
     analisaRecintos(animal, quantidade) {
         return analisaRecinto(animal, quantidade, this.recintos, this.animais);
     }
